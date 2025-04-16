@@ -1,6 +1,6 @@
 [project]
 name = "p_elasticsearch_easy"
-version = "0.1.0" 
+version = "1.0.0" 
 description = "Un recurso base para trabajar con Elasticsearch"
 authors = [
     { name = "Adrián Pérez", email = "apo00015@red.ujaen.es" }
