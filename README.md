@@ -9,25 +9,25 @@ P_Elascticsearch_Easy is a Python utility that provides a simplified class for i
 
 ## Features
 
-- Create a connection with elasticsearch
-- Obtener un documento dado un id
-- Realizar un delete_by_query
-- Actualizar un documento
-- Realizar un update_by_query
-- Indexar un documento
-- Realizar un bulk mediante la libreria de helpers
-- Realizar un bulk de forma nativa sin la librería de helpers
-- Realizar búsquedas en índices dadas querys
-- Obtener todos los documentos dada un query
-- Realizar búsquedas mediante un msearch
-- Obtener un conteo de documentos dada una query
+- Create a connection with Elasticsearch
+- Retrieve a document given an ID
+- Perform a delete_by_query
+- Update a document
+- Perform an update_by_query
+- Index a document
+- Perform a bulk operation using the helpers library
+- Perform a native bulk operation without using the helpers library
+- Perform searches in indices using queries
+- Retrieve all documents matching a query
+- Perform searches using msearch
+- Get a count of documents matching a query
 
 ## Installation
 
 You can install the package directly from PyPi using pip:
 
 ```bash
-pip3 install 
+pip3 install p-elasticsearch-easy
 ```
 
 ## License

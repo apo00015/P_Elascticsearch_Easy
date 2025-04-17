@@ -1,13 +1,13 @@
 [project]
 name = "p_elasticsearch_easy"
-version = "1.0.0" 
-description = "Un recurso base para trabajar con Elasticsearch"
+version = "1.0.1" 
+description = "A base resource for working with the Elasticsearch and ElasticsearchDSL libraries in a simple way."
 authors = [
     { name = "Adrián Pérez", email = "apo00015@red.ujaen.es" }
 ]
 readme = "README.md"
 requires-python = ">=3.8"
-license = { text = "MIT" }
+license = { text = "GPL-3.0-or-later" }
 
 dependencies = [
     "elasticsearch",

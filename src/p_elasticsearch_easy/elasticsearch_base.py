@@ -15,7 +15,7 @@ class ElasticsearchBase(ABC):
     @elastic_settings.setter
     def elastic_settings(self, value):
         if not isinstance(value, str) or value is None:
-            raise ValueError("La configuración de conexión debe ser un string")
+            raise ValueError("The connection configuration must be a string.")
         self.__elastic_settings = value
 
     @abstractmethod

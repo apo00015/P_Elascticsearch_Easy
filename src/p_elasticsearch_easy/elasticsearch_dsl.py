@@ -36,7 +36,7 @@ class ElasticsearchDSL(ElasticsearchBase):
     @name_connection.setter
     def name_connection(self, value):
         if value is None or not isinstance(value, str):
-            raise ValueError("name_connection debe ser un string no nulo.")
+            raise ValueError("name_connection must be a non-null string.")
         self.__name_connection = value
 
     def connect(self, timeout_elastic: int = TIMEOUT.ELASTIC):
