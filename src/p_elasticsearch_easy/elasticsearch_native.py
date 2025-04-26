@@ -112,27 +112,32 @@ class ElasticsearchNative(ElasticsearchBase):
         except:
             raise ElasticsearchException(f"Error to update data with painless script in {index}")
 
-    def index(self, document: dict, index: str):
+    def index(self, document: dict, index: str, id: str = None):
         """
         Indexes a new document into the specified Elasticsearch index.
 
         The provided dictionary is serialized into JSON before being sent. If the dictionary contains
         objects, they are converted using their `__dict__` attribute.
 
-        :param information: A dictionary representing the document to be indexed.
-                            Objects within the dictionary will be serialized automatically.
-        :type information: dict
+        :param document: A dictionary representing the document to be indexed.
+                        Objects within the dictionary will be serialized automatically.
+        :type document: dict
         :param index: The name of the Elasticsearch index where the document will be stored.
         :type index: str
+        :param id: Optional ID to assign to the document. If not provided, Elasticsearch will generate one.
+        :type id: str, optional
         :return: Response from Elasticsearch confirming the indexing operation.
         :rtype: dict
         :raises ElasticsearchException: If an error occurs while indexing the document.
         """
         try:
             document = json.dumps(document, default=lambda y: y.__dict__)
-            return self.__elasticsearch_client.index(index=index, body=document)
-        except:
-            raise ElasticsearchException(f"Error to insert new data in {index}")
+            if id:
+                return self.__elasticsearch_client.index(index=index, id=id, body=document)
+            else:
+                return self.__elasticsearch_client.index(index=index, body=document)
+        except Exception as e:
+            raise ElasticsearchException(f"Error to insert new data in {index}: {e}")
 
     def bulk(self, actions: list):
         """
@@ -268,6 +273,23 @@ class ElasticsearchNative(ElasticsearchBase):
             return resp_count["count"]
         except Exception as e:
             raise ElasticsearchException(f"Error performing count: {e}")
+
+    def delete_by_id(self, index: str, id: str) -> dict:
+        """
+        Deletes a document from the specified Elasticsearch index by its ID.
+
+        :param index: Name of the index where the document resides.
+        :type index: str
+        :param id: ID of the document to delete.
+        :type id: str
+        :return: The response from Elasticsearch confirming the deletion.
+        :rtype: dict
+        :raises ElasticsearchException: If an error occurs while deleting the document.
+        """
+        try:
+            return self.__elasticsearch_client.delete(index=index, id=id)
+        except Exception as e:
+            raise ElasticsearchException(f"Error deleting document {id} from index {index}: {e}")
 
     def close(self) -> None:
         """

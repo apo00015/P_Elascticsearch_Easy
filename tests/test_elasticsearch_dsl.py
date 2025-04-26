@@ -22,10 +22,3 @@ class TestElaticSearchDSL:
     def test_initialization_fail(self, name_connection):
         with pytest.raises(ValueError):
             ElasticsearchDSL("", name_connection)
-
-    # def test_conecct_success(self):
-    #     elastic_search_dsl = ElasticsearchDSL("")
-
-    #     assert elastic_search_dsl._elasticsearch_client is None
-    #     elastic_search_dsl.connect()
-    #     assert elastic_search_dsl._elasticsearch_client is not None
