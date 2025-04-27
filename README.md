@@ -15,6 +15,8 @@ P_Elascticsearch_Easy is a Python utility that provides a simplified class for i
 - Update a document
 - Perform an update_by_query
 - Index a document
+- Index a document given an ID
+- Delete a document given an ID
 - Perform a bulk operation using the helpers library
 - Perform a native bulk operation without using the helpers library
 - Perform searches in indices using queries
