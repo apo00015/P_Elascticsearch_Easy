@@ -29,7 +29,7 @@ class ElasticsearchNative(ElasticsearchBase):
         """
         try:
             self.__elasticsearch_client = Elasticsearch(self.elastic_settings, timeout=timeout_elastic, max_retries=6, retry_on_timeout=True)
-        except:
+        except Exception:
             raise ElasticsearchException(f"Error to connect with node {self.elastic_settings}")
 
     def get_document_by_id(self, id: str, index: str):
@@ -46,7 +46,7 @@ class ElasticsearchNative(ElasticsearchBase):
         """
         try:
             return self.__elasticsearch_client.get(index=index, id=id)
-        except:
+        except Exception:
             raise ElasticsearchException(f"Error searching id in {index}")
 
     def delete_by_query(self, information, index):
@@ -69,7 +69,7 @@ class ElasticsearchNative(ElasticsearchBase):
         try:
             information = json.dumps(information, default=lambda y: y.__dict__)
             return self.__elasticsearch_client.delete_by_query(index=index, body=information)
-        except:
+        except Exception:
             raise ElasticsearchException(f"Error to delete_by_query in {index}")
 
     def update(self, document: dict, id: str, index: str):
@@ -88,7 +88,7 @@ class ElasticsearchNative(ElasticsearchBase):
         """
         try:
             return self.__elasticsearch_client.update(index=index, id=id, doc=document, refresh="wait_for")
-        except:
+        except Exception:
             raise ElasticsearchException(f"Error to update new data in {index}")
 
     def update_by_query(self, body: dict, index: str, wait_for="true"):
@@ -109,7 +109,7 @@ class ElasticsearchNative(ElasticsearchBase):
         """
         try:
             return self.__elasticsearch_client.update_by_query(index=index, body=body, refresh=wait_for)
-        except:
+        except Exception:
             raise ElasticsearchException(f"Error to update data with painless script in {index}")
 
     def index(self, document: dict, index: str, id: str = None):
@@ -155,7 +155,7 @@ class ElasticsearchNative(ElasticsearchBase):
         """
         try:
             return helpers.bulk(self.__elasticsearch_client, actions)
-        except:
+        except Exception:
             raise ElasticsearchException("Error performing bulk operations")
 
     def bulk_without_helper(self, operations: list, wait_for: str = "false"):
@@ -180,7 +180,7 @@ class ElasticsearchNative(ElasticsearchBase):
         """
         try:
             return self.__elasticsearch_client.bulk(operations=operations, refresh=wait_for)
-        except:
+        except Exception:
             raise ElasticsearchException("Error performing bulk operation")
 
     def search(self, body: dict, index: str):
@@ -198,7 +198,7 @@ class ElasticsearchNative(ElasticsearchBase):
         """
         try:
             return self.__elasticsearch_client.search(index=index, body=body)
-        except:
+        except Exception:
             raise ElasticsearchException(f"Error searching data {body} in {index}")
 
     def search_all(self, body: dict, index: str):
@@ -226,7 +226,7 @@ class ElasticsearchNative(ElasticsearchBase):
                 result_final.extend(response["hits"]["hits"])
 
             return result_final
-        except:
+        except Exception:
             raise ElasticsearchException(f"Error searching data {body} in {index}")
 
     def msearch(self, searches: list):
@@ -291,6 +291,28 @@ class ElasticsearchNative(ElasticsearchBase):
         except Exception as e:
             raise ElasticsearchException(f"Error deleting document {id} from index {index}: {e}")
 
+    def mget(self, index: str, doc_ids: list):
+        """
+        Retrieves multiple documents from the specified Elasticsearch index using their document IDs.
+
+        This method sends a single multi-get (`_mget`) request to Elasticsearch, allowing you to
+        fetch multiple documents efficiently in one operation.
+
+        :param index: The name of the Elasticsearch index to query.
+        :type index: str
+        :param doc_ids: A list of document IDs to retrieve.
+        :type doc_ids: list
+
+        :return: The response from Elasticsearch containing the requested documents.
+        :rtype: dict
+
+        :raises ElasticsearchException: If an error occurs while attempting to fetch the documents.
+        """
+        try:
+            return self.__elasticsearch_client.mget(index=index, body={"ids": doc_ids})
+        except Exception as e:
+            raise ElasticsearchException(f"Error fetching docs {doc_ids} from index '{index}': {str(e)}")
+
     def close(self) -> None:
         """
         Closes the current connection to the Elasticsearch client.
@@ -302,5 +324,5 @@ class ElasticsearchNative(ElasticsearchBase):
         """
         try:
             self.__elasticsearch_client.close()
-        except:
+        except Exception:
             raise ElasticsearchException("Error closing connection")

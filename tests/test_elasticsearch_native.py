@@ -296,6 +296,39 @@ class TestElaticSearchNative:
 
         with pytest.raises(ElasticsearchException, match="Error performing multi search operations"):
             es.msearch([{"index": "test"}, {"query": {"match_all": {}}}])
+    
+    def test_mget_success(self):
+        es = ElasticsearchNative("http://localhost:9200")
+
+        mock_client = MagicMock()
+        mock_response = {
+            "docs": [
+                {"_id": "1", "found": True, "_source": {"campo": "valor1"}},
+                {"_id": "2", "found": False},
+                {"_id": "3", "found": True, "_source": {"campo": "valor3"}}
+            ]
+        }
+        mock_client.mget.return_value = mock_response
+        es._ElasticsearchNative__elasticsearch_client = mock_client
+
+        doc_ids = ["1", "2", "3"]
+        result = es.mget(index="my_index", doc_ids=doc_ids)
+
+        mock_client.mget.assert_called_once_with(index="my_index", body={"ids": doc_ids})
+
+        assert result == mock_response
+    
+    def test_mget_raises_exception(self):
+        es = ElasticsearchNative("http://localhost:9200")
+
+        mock_client = MagicMock()
+        mock_client.mget.side_effect = Exception("Something went wrong")
+        es._ElasticsearchNative__elasticsearch_client = mock_client
+
+        doc_ids = ["1", "2", "3"]
+        
+        with pytest.raises(ElasticsearchException, match="Error fetching docs"):
+            es.mget(index="my_index", doc_ids=doc_ids)
 
     def test_count_success(self):
         es = ElasticsearchNative("http://localhost:9200")

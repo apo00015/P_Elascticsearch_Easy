@@ -22,6 +22,7 @@ P_Elascticsearch_Easy is a Python utility that provides a simplified class for i
 - Perform searches in indices using queries
 - Retrieve all documents matching a query
 - Perform searches using msearch
+- Perform searches using mget
 - Get a count of documents matching a query
 
 ## Installation
@@ -137,6 +138,11 @@ searches = [
 ]
 
 es_native.msearch(searches=searches)
+
+# We execute de mget
+doc_ids = ["1", "2", "3"]
+
+response = es_native.mget(index="name_index", doc_ids=doc_ids)
 
 # We execute the count
 query = {
